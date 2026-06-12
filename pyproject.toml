@@ -1,0 +1,51 @@
+[project]
+name = "agentic-finantial-advisor"
+version = "0.1.0"
+description = "News-driven financial advising simulation — agentic, observable, evaluable"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "black>=26.5.1",
+    "mypy>=2.1.0",
+    "ruff>=0.15.17",
+]
+
+# ── Formatting: Black ─────────────────────────────────────────────────────────
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+# ── Linting: Ruff ─────────────────────────────────────────────────────────────
+# Ruff handles linting; Black handles formatting. They share line-length so they
+# never disagree. E501 is disabled because Black enforces line length already.
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes (undefined names, unused imports)
+    "I",   # isort (import order)
+    "B",   # flake8-bugbear (likely bugs and design issues)
+    "C4",  # flake8-comprehensions (unnecessary comprehensions)
+    "UP",  # pyupgrade (use modern Python syntax)
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "E501", # line too long — Black owns this
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src", "app"]
+
+# ── Type checking: mypy ───────────────────────────────────────────────────────
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+exclude = ["notebooks/"]

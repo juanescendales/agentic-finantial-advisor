@@ -1,0 +1,21 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# uv
+.python-version
+
+# Env
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
