@@ -1,0 +1,16 @@
+AGENTS.md
+  h_bf2333a39b90b4 1-133
+CLAUDE.md
+  h_bf2333a39b90b4 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "0a54296228b33e4048e2ec25244c703c42313718",
+  "prompts": {},
+  "humans": {
+    "h_bf2333a39b90b4": {
+      "author": "imontoyah <imontoyah@eafit.edu.co>"
+    }
+  }
+}
