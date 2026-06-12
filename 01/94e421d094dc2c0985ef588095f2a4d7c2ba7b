@@ -1,0 +1,21 @@
+CLAUDE.md
+  s_ca754e5b846b39::t_f86584d6dabe1c 1-94
+README.md
+  s_ca754e5b846b39::t_88cb208c8e6dbe 1-186
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "0194e421d094dc2c0985ef588095f2a4d7c2ba7b",
+  "prompts": {},
+  "sessions": {
+    "s_ca754e5b846b39": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a0b84fc2-2fe6-46e4-baed-43c19eac1edc",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Juan Cendales <juanescendales@gmail.com>"
+    }
+  }
+}
