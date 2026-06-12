@@ -114,8 +114,9 @@ flowchart TD
 
 | Component | Technology |
 |-----------|-----------|
-| LLM provider | Anthropic Claude (via `anthropic` SDK) |
-| Default model | `claude-sonnet-4-6` |
+| LLM provider | OpenRouter (via `openai` SDK) |
+| Default model | `meta-llama/llama-3.3-70b-instruct:free` |
+| Speed model | `mistralai/mistral-7b-instruct:free` |
 | Language | Python 3.11+ |
 | Observability | Structured logs + custom tracer |
 | Evaluation | LLM-as-judge + rule-based scoring |
@@ -126,22 +127,25 @@ flowchart TD
 
 ```
 agentic-finantial-advisor/
+├── app/
+├── docs/
 ├── src/
 │   ├── agents/
 │   │   ├── ingestion.py       # News fetching and normalization
 │   │   ├── analysis.py        # Sentiment and entity extraction
 │   │   └── advisor.py         # Advice generation
 │   ├── tools/                 # Shared tool definitions for agents
-│   ├── observability/
-│   │   ├── logger.py          # Structured JSON logging
-│   │   └── tracer.py          # Span-based tracing
+│   └── observability/
+│       ├── logger.py          # Structured JSON logging
+│       └── tracer.py          # Span-based tracing
+├── tests/
 │   └── evals/
 │       ├── rubrics/           # Rubric definitions (YAML/JSON)
 │       └── results/           # Scored run outputs for comparison
-├── tests/
 ├── notebooks/                 # Exploration and result analysis
 ├── data/                      # News samples for development/testing
-├── CLAUDE.md                  # Instructions for AI coding assistants
+├── AGENTS.md                  # Instructions for AI coding assistants
+├── CLAUDE.md
 └── README.md
 ```
 
@@ -156,8 +160,8 @@ cd agentic-finantial-advisor
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Set your Anthropic API key
-export ANTHROPIC_API_KEY=sk-...
+# Set your OpenRouter API key
+export OPENROUTER_API_KEY=sk-or-...
 
 # Run the pipeline
 python src/main.py
@@ -179,7 +183,7 @@ The comparison between baseline and improved versions is the core deliverable.
 
 ## Educational Focus Areas
 
-- **Multi-agent orchestration** with the Anthropic SDK
+- **Multi-agent orchestration** with OpenRouter (via `openai` SDK)
 - **Tool use** patterns for structured agent outputs
 - **Observability** instrumentation in agentic systems
 - **LLM evaluation** — defining rubrics, running judges, tracking scores

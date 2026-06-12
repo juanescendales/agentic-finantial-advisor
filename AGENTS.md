@@ -79,9 +79,10 @@ News Sources → Ingestion Agent → Analysis Agent → Advisor Agent → User R
 ### Language & Stack
 
 - Python 3.11+
-- Use the **Anthropic SDK** (`anthropic`) for all LLM calls — never use OpenAI or other providers unless explicitly told
-- Default model: `claude-sonnet-4-6` unless a task requires reasoning depth (`claude-opus-4-7`) or speed (`claude-haiku-4-5-20251001`)
-- Use `anthropic.Anthropic()` client directly — avoid LangChain or LlamaIndex abstractions
+- Use **OpenRouter** via the `openai` SDK — never use other providers unless explicitly told
+- Client: `openai.OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.environ["OPENROUTER_API_KEY"])`
+- Default model: `meta-llama/llama-3.3-70b-instruct:free` unless the task requires speed (`mistralai/mistral-7b-instruct:free`)
+- Avoid LangChain or LlamaIndex abstractions
 - Prefer **tool use** over prompt chaining for structured outputs
 
 ### Observability (non-negotiable)
