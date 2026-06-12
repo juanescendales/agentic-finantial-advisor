@@ -173,7 +173,6 @@ At the end of this project there should be:
 - A dashboard or report showing evaluation scores across two or more iterations
 - A clear narrative: *"we changed X, and Y metric improved by Z"*
 
-The comparison between baseline and improved versions is the core deliverable.
 
 ---
 
