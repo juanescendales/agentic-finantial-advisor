@@ -1,0 +1,14 @@
+.claude/settings.json
+  h_b7ad79f71cf13d 2,6-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "60194a22e44329a1d9ae87ebd45b1e1adc24270d",
+  "prompts": {},
+  "humans": {
+    "h_b7ad79f71cf13d": {
+      "author": "Juan Cendales <juanescendales@gmail.com>"
+    }
+  }
+}

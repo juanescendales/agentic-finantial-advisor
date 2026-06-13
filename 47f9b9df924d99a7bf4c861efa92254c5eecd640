@@ -1,0 +1,27 @@
+.claude/hooks/run-ruff.sh
+  s_ea81d8e584fee1::t_87d95feea89532 1-18
+.claude/settings.json
+  s_ea81d8e584fee1::t_eb64748d7e86b9 12-14
+.claude/hooks/run-mypy.sh
+  s_ea81d8e584fee1::t_87d95feea89532 1-18
+.claude/skills/python-practices/SKILL.md
+  s_ea81d8e584fee1::t_91f72833f5f497 1-213
+.claude/hooks/run-black.sh
+  s_ea81d8e584fee1::t_87d95feea89532 1-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "47f9b9df924d99a7bf4c861efa92254c5eecd640",
+  "prompts": {},
+  "sessions": {
+    "s_ea81d8e584fee1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "094c7280-392e-4406-9c27-7bd449a1ebe9",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Juan Cendales <juanescendales@gmail.com>"
+    }
+  }
+}
