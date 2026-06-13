@@ -1,0 +1,22 @@
+.agents/skills/python-practices/SKILL.md
+  s_50cf92d7cf4e17::t_d1b67d4d0e3925 133
+  s_50cf92d7cf4e17::t_ed7e509286d038 137,139,142,145-146,149,164-165,167-168
+  s_50cf92d7cf4e17::t_675ee61025db97 58-59
+  s_50cf92d7cf4e17::t_72552ede078705 99-101,104,106
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "4be2a754b4be08e9a1eebe8ee6b7d2900c213add",
+  "prompts": {},
+  "sessions": {
+    "s_50cf92d7cf4e17": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d2c30e4-fd0b-461d-b0f7-cc2ea4025908",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Juan Cendales <juanescendales@gmail.com>"
+    }
+  }
+}
