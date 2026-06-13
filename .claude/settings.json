@@ -9,9 +9,9 @@
         {
           "matcher": "Edit|Write",
           "hooks": [
-            { "type": "command", "command": "bash .agents/hooks/run-black.sh" },
-            { "type": "command", "command": "bash .agents/hooks/run-ruff.sh" },
-            { "type": "command", "command": "bash .agents/hooks/run-mypy.sh" }
+            { "type": "command", "command": "bash .claude/hooks/run-black.sh" },
+            { "type": "command", "command": "bash .claude/hooks/run-ruff.sh" },
+            { "type": "command", "command": "bash .claude/hooks/run-mypy.sh" }
           ]
         }
       ]
