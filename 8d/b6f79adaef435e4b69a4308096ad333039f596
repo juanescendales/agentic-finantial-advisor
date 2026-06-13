@@ -1,0 +1,22 @@
+src/graph/state.py
+  s_6cf39f0eceaf66::t_a7a6f6c87866a3 1-27
+src/graph/schemas.py
+  s_6cf39f0eceaf66::t_68f0ad99c8458c 15,23-24
+  s_6cf39f0eceaf66::t_a7a6f6c87866a3 1-14,16-22,25-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "8db6f79adaef435e4b69a4308096ad333039f596",
+  "prompts": {},
+  "sessions": {
+    "s_6cf39f0eceaf66": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ebf45-bd42-7b12-aed2-720ac80bbb11",
+        "model": "gpt-5.5"
+      },
+      "human_author": "imontoyah <imontoyah@eafit.edu.co>"
+    }
+  }
+}
