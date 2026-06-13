@@ -55,14 +55,8 @@ Circular imports signal a design problem, not a Python limitation.
 
 The rule: dependencies flow **one direction only**.
 
-```
-domain/ ← use_cases/ ← adapters/
-              ↑
-           ports/
-```
-
-If module A imports from B and B imports from A, one of them belongs in a third module
-that both can import from — usually `shared/` or `domain/`.
+If module A imports from B and B imports from A, one of them belongs in a third file
+that both can import from — extract the shared concept there.
 
 ```
 # Wrong: two modules importing each other
@@ -102,14 +96,14 @@ A single concrete dependency that never changes doesn't need inversion.
 
 ```python
 # Premature — one implementation, no test that needs a double
-class AnalysisUseCase:
-    def __init__(self, repo: NewsRepository) -> None:
-        self.repo = repo
+class Analyzer:
+    def __init__(self, fetcher: NewsFetcher) -> None:
+        self.fetcher = fetcher
 
 # Appropriate at this stage
-class AnalysisUseCase:
+class Analyzer:
     def __init__(self) -> None:
-        self.repo = NewsRepository()
+        self.fetcher = NewsFetcher()
 ```
 
 ---
@@ -136,23 +130,23 @@ Don't design to GRASP from scratch — let the code grow and apply these when yo
 
 **Information Expert:** If a use case is computing something an entity already has the data for, that's a smell.
 **Low Coupling / High Cohesion:** If a change in one file ripples to five others, that's a signal — not a reason to add layers preemptively.
-**Controller:** Routers should delegate, not contain logic. But don't create a use case layer until there's actual logic to separate.
+**Controller:** Entry points (routers, CLI handlers) should delegate, not contain logic. But don't extract a separate file for logic until there's actual logic worth separating.
 
 ---
 
-## 6. Ports and Adapters — Earn the Abstraction
+## 6. Abstractions — Earn Them
 
-**Default to a plain class.** A port + adapter split only makes sense when at least one of
+**Default to a plain class.** A `Protocol` (interface) only makes sense when at least one of
 these is true today, not hypothetically:
 
-1. There are (or will be) **multiple concrete implementations** in the same codebase.
+1. There are **multiple concrete implementations** in the same codebase.
 2. Tests **require a fake** because the real implementation is slow, flaky, or has side effects.
 
-If neither applies — you have one provider and no test that needs a double — a plain class is
-the right call. Don't introduce a `Protocol` to make the code "feel" like clean architecture.
+If neither applies, a plain class is the right call. Don't introduce a `Protocol` to make the
+code "feel" more abstract.
 
 ```python
-# Fine when Anthropic is the only provider and tests call it directly
+# Fine when there's one implementation and tests call it directly
 class LLMClient:
     def __init__(self, model: str) -> None:
         self._client = anthropic.Anthropic()
@@ -167,12 +161,11 @@ class LLMClient:
         return msg.content[0].text
 ```
 
-When the split *is* warranted, define the `Protocol` in `ports/` and the implementation in
-`adapters/`. The use case imports only the protocol; tests inject a fake.
+When a `Protocol` *is* warranted, define it alongside or above the code that uses it — no
+prescribed folder structure required. The consumer file imports the protocol; tests inject a fake.
 
-**Suggest the split, don't impose it.** If you see a reason the abstraction will pay off soon,
-say so explicitly — e.g., "a second provider is planned" or "this blocks unit tests." Let the
-team decide. Never add a port just because there is I/O.
+**Suggest the abstraction, don't impose it.** Name the concrete reason — "a second provider is
+planned" or "this blocks unit tests." Never add an interface just because there is I/O.
 
 ---
 
