@@ -5,11 +5,16 @@ description = "News-driven financial advising simulation — agentic, observable
 requires-python = ">=3.12"
 dependencies = []
 
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
 [dependency-groups]
 dev = [
-    "black>=26.5.1",
-    "mypy>=2.1.0",
-    "ruff>=0.15.17",
+    "black>=25.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.11.0",
 ]
 
 # ── Formatting: Black ─────────────────────────────────────────────────────────
