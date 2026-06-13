@@ -10,8 +10,11 @@ description: >
 
 # Python Best Practices
 
-Apply these rules every time you write or modify Python code. They are not optional —
-they define the minimum standard for every file in this project.
+**The north star: write the simplest code that solves the problem today.**
+Every abstraction, pattern, class, and layer has a cost. Only pay that cost when the
+benefit is concrete and present — not hypothetical. When in doubt, stay flat.
+
+Apply these rules every time you write or modify Python code.
 
 ---
 
@@ -52,14 +55,8 @@ Circular imports signal a design problem, not a Python limitation.
 
 The rule: dependencies flow **one direction only**.
 
-```
-domain/ ← use_cases/ ← adapters/
-              ↑
-           ports/
-```
-
-If module A imports from B and B imports from A, one of them belongs in a third module
-that both can import from — usually `shared/` or `domain/`.
+If module A imports from B and B imports from A, one of them belongs in a third file
+that both can import from — extract the shared concept there.
 
 ```
 # Wrong: two modules importing each other
@@ -77,35 +74,36 @@ stop. Redesign instead.
 
 ---
 
-## 3. SOLID
+## 3. SOLID — Diagnostic Tools, Not Construction Mandates
 
-**S — Single Responsibility:** One class, one reason to change.
-A class that fetches news AND parses it AND stores it has three reasons to change.
-Split it.
+Use SOLID to **diagnose existing pain**, not to pre-emptively add structure.
+Before applying any principle, ask: "Is this pain real right now, or am I anticipating it?"
 
-**O — Open/Closed:** Extend behavior through new classes or injected dependencies,
-not by editing existing ones. This is why ports exist.
+**S — Single Responsibility:** A class doing too many unrelated things is a signal to split.
+Don't split preemptively — wait until a class is actually hard to read or change.
 
-**L — Liskov Substitution:** Any implementation of a `Protocol` must be
-substitutable without breaking the caller. Don't override methods in a way that
-changes their contract.
+**O — Open/Closed:** Relevant when you have proven variation points.
+Don't create extension seams for imagined futures.
 
-**I — Interface Segregation:** Keep `Protocol`s small and focused.
-A `NewsSource` protocol with one method is better than a `DataManager` with six.
+**L — Liskov Substitution:** Applies when you already have multiple implementations.
+If there's only one, the contract question is moot.
 
-**D — Dependency Inversion:** Use cases depend on protocols, never on concrete adapters.
-Inject dependencies; never instantiate I/O objects inside business logic.
+**I — Interface Segregation:** Keep `Protocol`s small when you already need them.
+Don't create a `Protocol` just to have one.
+
+**D — Dependency Inversion:** Inject dependencies when you need to swap or test them.
+A single concrete dependency that never changes doesn't need inversion.
 
 ```python
-# Wrong
-class AnalysisUseCase:
-    def __init__(self) -> None:
-        self.repo = PostgresNewsRepository()  # concrete, untestable
+# Premature — one implementation, no test that needs a double
+class Analyzer:
+    def __init__(self, fetcher: NewsFetcher) -> None:
+        self.fetcher = fetcher
 
-# Right
-class AnalysisUseCase:
-    def __init__(self, repo: NewsRepository) -> None:  # protocol, injectable
-        self.repo = repo
+# Appropriate at this stage
+class Analyzer:
+    def __init__(self) -> None:
+        self.fetcher = NewsFetcher()
 ```
 
 ---
@@ -125,41 +123,31 @@ Abstractions earn their complexity; they are not free.
 
 ---
 
-## 5. GRASP — Who Owns What
+## 5. GRASP — Use to Diagnose, Not to Design Upfront
 
-**Information Expert:** Assign responsibility to the class that has the data.
-An `Article` knows its own word count; a use case should not compute it.
+GRASP principles are most useful when reading existing code and noticing something feels wrong.
+Don't design to GRASP from scratch — let the code grow and apply these when you feel friction.
 
-**Creator:** The class that aggregates or closely uses an object should create it.
-A `NewsIngestionUseCase` creates `Article` objects; a router does not.
-
-**Low Coupling:** Minimize how many things a class depends on.
-If changing one module forces changes in five others, something is coupled wrong.
-
-**High Cohesion:** Keep things that change together, together.
-Everything in `ingestion/` belongs to ingestion. If it doesn't, move it.
-
-**Controller:** Use cases are the controllers. Routers delegate to them; they don't do logic themselves.
+**Information Expert:** If a use case is computing something an entity already has the data for, that's a smell.
+**Low Coupling / High Cohesion:** If a change in one file ripples to five others, that's a signal — not a reason to add layers preemptively.
+**Controller:** Entry points (routers, CLI handlers) should delegate, not contain logic. But don't extract a separate file for logic until there's actual logic worth separating.
 
 ---
 
-## 6. Ports and Adapters — Use When There Is I/O
+## 6. Abstractions — Earn Them
 
-Any time a use case needs to talk to the outside world (HTTP, DB, file system, LLM API),
-define a `Protocol` in `ports/` and a concrete implementation in `adapters/`.
+**Default to a plain class.** A `Protocol` (interface) only makes sense when at least one of
+these is true today, not hypothetically:
+
+1. There are **multiple concrete implementations** in the same codebase.
+2. Tests **require a fake** because the real implementation is slow, flaky, or has side effects.
+
+If neither applies, a plain class is the right call. Don't introduce a `Protocol` to make the
+code "feel" more abstract.
 
 ```python
-# src/ports/llm_client.py
-from typing import Protocol
-
-class LLMClient(Protocol):
-    def complete(self, prompt: str) -> str: ...
-
-
-# src/adapters/anthropic_adapter.py
-import anthropic
-
-class AnthropicAdapter:
+# Fine when there's one implementation and tests call it directly
+class LLMClient:
     def __init__(self, model: str) -> None:
         self._client = anthropic.Anthropic()
         self._model = model
@@ -173,25 +161,29 @@ class AnthropicAdapter:
         return msg.content[0].text
 ```
 
-The use case only knows `LLMClient`. Tests inject a fake. Production injects `AnthropicAdapter`.
-Zero changes to business logic when switching providers.
+When a `Protocol` *is* warranted, define it alongside or above the code that uses it — no
+prescribed folder structure required. The consumer file imports the protocol; tests inject a fake.
+
+**Suggest the abstraction, don't impose it.** Name the concrete reason — "a second provider is
+planned" or "this blocks unit tests." Never add an interface just because there is I/O.
 
 ---
 
-## 7. Design Patterns — Apply With Intention
+## 7. Design Patterns — Last Resort, Not First Instinct
 
-Use patterns when they solve a real, present problem — not to make the code look architectural.
+A plain function is better than a class. A plain class is better than a pattern.
+Only reach for a pattern when the plain solution has a concrete, observable problem.
 
-| Pattern | When to use it |
-|---------|---------------|
-| **Strategy** | You need to swap an algorithm at runtime (e.g., different scoring rubrics) |
-| **Factory** | Object creation logic is complex or depends on config |
-| **Observer / Event** | One thing happens and multiple things need to react |
-| **Decorator** | Add cross-cutting behavior (logging, retry) without modifying the target |
-| **Template Method** | You have a fixed skeleton with variable steps |
+| Pattern | Only when... |
+|---------|-------------|
+| **Strategy** | You are *actually* swapping algorithms at runtime today |
+| **Factory** | Creation logic is *already* complex enough to be confusing inline |
+| **Observer / Event** | Multiple *existing* things need to react to the same event |
+| **Decorator** | Cross-cutting behavior can't be added any other way |
+| **Template Method** | You have *proven* duplication in a step sequence |
 
-If you can solve the problem with a plain function and a `Protocol`, do that first.
-Reach for patterns when the plain solution starts to hurt.
+When you feel the pull toward a pattern, ask: "Can I solve this with a function or a plain class?"
+If yes, do that. Name the pattern in a comment only if the indirection would otherwise confuse a reader.
 
 ---
 
@@ -213,7 +205,9 @@ Run `black` and `ruff` before every commit. If they change something, understand
 - [ ] All functions and methods have full type annotations
 - [ ] `mypy --strict` passes on this file
 - [ ] No import inside a function body to avoid circular dependency
-- [ ] No class has more than one reason to change
-- [ ] Every I/O dependency is behind a `Protocol`
+- [ ] Could this be a function instead of a class? A module instead of a package?
+- [ ] Every class, layer, and abstraction has a concrete reason to exist *right now*
+- [ ] I/O dependencies are behind a `Protocol` only if there are multiple implementations or tests need a fake — otherwise a plain class is fine
 - [ ] No logic duplicated from another file
 - [ ] Nothing implemented "for the future" that isn't needed today
+- [ ] If you added a pattern or layer, can you name the specific pain it solves?

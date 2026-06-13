@@ -1,7 +1,19 @@
 {
-  "disableAllHooks": true,
+  "disableAllHooks": false,
   "disableBundledSkills": true,
   "enabledPlugins": {},
   "enableAllProjectMcpServers": false,
-  "disabledMcpjsonServers": []
+  "disabledMcpjsonServers": [],
+  "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Edit|Write",
+          "hooks": [
+            { "type": "command", "command": "bash .claude/hooks/run-black.sh" },
+            { "type": "command", "command": "bash .claude/hooks/run-ruff.sh" },
+            { "type": "command", "command": "bash .claude/hooks/run-mypy.sh" }
+          ]
+        }
+      ]
+    }
 }
