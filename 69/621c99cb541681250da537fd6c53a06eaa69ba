@@ -1,0 +1,19 @@
+pyproject.toml
+  s_6cf39f0eceaf66::t_a7a6f6c87866a3 6-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "69621c99cb541681250da537fd6c53a06eaa69ba",
+  "prompts": {},
+  "sessions": {
+    "s_6cf39f0eceaf66": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ebf45-bd42-7b12-aed2-720ac80bbb11",
+        "model": "gpt-5.5"
+      },
+      "human_author": "imontoyah <imontoyah@eafit.edu.co>"
+    }
+  }
+}
