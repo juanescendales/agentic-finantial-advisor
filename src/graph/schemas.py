@@ -19,7 +19,6 @@ class FundamentalsSnapshot(BaseModel):
     profit_margins: float | None = None  # profitability: revenue kept as profit
 
 
-# Market: how the stock's price is behaving (trend, momentum, risk), not the business.
 class MarketSnapshot(BaseModel):
     start_date: str
     end_date: str
