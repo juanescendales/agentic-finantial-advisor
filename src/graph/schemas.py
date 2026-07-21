@@ -13,10 +13,10 @@ class NewsItem(BaseModel):
 
 class FundamentalsSnapshot(BaseModel):
     as_of_date: str
-    market_cap: float | None = None
-    trailing_pe: float | None = None
-    revenue_growth: float | None = None
-    profit_margins: float | None = None
+    market_cap: float | None = None  # company size: share price x shares outstanding
+    trailing_pe: float | None = None  # valuation: price paid per $1 of past earnings
+    revenue_growth: float | None = None  # growth: is the business expanding its sales
+    profit_margins: float | None = None  # profitability: revenue kept as profit
 
 
 class MarketSnapshot(BaseModel):
