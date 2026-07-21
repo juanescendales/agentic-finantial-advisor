@@ -7,6 +7,7 @@ dependencies = [
     "langgraph>=1.0.0",
     "pydantic>=2.0.0",
     "yfinance>=0.2.40",
+    "pandas>=2.2.0",
 ]
 
 [[tool.uv.index]]
@@ -19,6 +20,7 @@ dev = [
     "black>=25.0.0",
     "mypy>=1.0.0",
     "ruff>=0.11.0",
+    "pandas-stubs>=2.2.0",
 ]
 
 # ── Formatting: Black ─────────────────────────────────────────────────────────

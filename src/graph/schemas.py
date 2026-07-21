@@ -19,13 +19,14 @@ class FundamentalsSnapshot(BaseModel):
     profit_margins: float | None = None  # profitability: revenue kept as profit
 
 
+# Market: how the stock's price is behaving (trend, momentum, risk), not the business.
 class MarketSnapshot(BaseModel):
     start_date: str
     end_date: str
-    last_close: float | None = None
-    sma_50: float | None = None
-    rsi_14: float | None = None
-    volatility_6m: float | None = None
+    last_close: float | None = None  # most recent closing price
+    sma_50: float | None = None  # trend: 50-day average price
+    rsi_14: float | None = None  # momentum: 0-100, >70 overbought, <30 oversold
+    volatility_6m: float | None = None  # risk: annualized std of daily returns
 
 
 class AnalystReport(BaseModel):
