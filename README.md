@@ -157,17 +157,17 @@ agentic-finantial-advisor/
 # Clone and set up
 git clone <repo-url>
 cd agentic-finantial-advisor
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+uv sync
 
-# Set your OpenRouter API key
+# Set your OpenRouter API key (used by the LLM nodes) — shell env var
 export OPENROUTER_API_KEY=sk-or-...
 
-# Tavily is used for fetch_news — put it in a local .env (auto-loaded by src/config.py)
+# Set your Tavily API key (used by fetch_news) — goes in a local .env instead
+# of export, because src/config.py (pydantic-settings) loads it from there
 echo "TAVILY_API_KEY=tvly-..." >> .env
 
 # Run the pipeline
-python src/main.py
+uv run python -m app
 ```
 
 ---
