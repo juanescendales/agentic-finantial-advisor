@@ -163,6 +163,9 @@ pip install -r requirements.txt
 # Set your OpenRouter API key
 export OPENROUTER_API_KEY=sk-or-...
 
+# Tavily is used for fetch_news — put it in a local .env (auto-loaded by src/config.py)
+echo "TAVILY_API_KEY=tvly-..." >> .env
+
 # Run the pipeline
 python src/main.py
 ```
