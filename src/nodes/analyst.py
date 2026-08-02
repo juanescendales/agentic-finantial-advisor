@@ -1,11 +1,13 @@
 import time
 
 from openai import OpenAI
+from openai.types.chat import ChatCompletionMessageParam
+from openai.types.shared_params import ResponseFormatJSONSchema
 from pydantic import ValidationError
 
 from src.config import settings
-from src.graph.state import AdvisorState
 from src.graph.schemas import AnalystReport
+from src.graph.state import AdvisorState
 from src.observability.logger import log_node_event
 from src.prompts.analyst import generate_analyst_prompt
 
@@ -23,13 +25,13 @@ def load_client() -> OpenAI:
     return _client
 
 
-def _build_messages(state: AdvisorState) -> list[dict[str, str]]:
+def _build_messages(state: AdvisorState) -> list[ChatCompletionMessageParam]:
     prompt = generate_analyst_prompt(
         ticker=state.ticker,
         company_name=state.company_name or "",
-        news_data=str([item.model_dump() for item in state.news_data]) if state.news_data else "No news data available.",
-        fundamentals_data=state.fundamentals_data.model_dump_json() if state.fundamentals_data else "No fundamentals data available.",
-        market_data=state.market_data.model_dump_json() if state.market_data else "No market data available.",
+        news_data=str([item.to_str() for item in state.news_data]) if state.news_data else "No news data available.",
+        fundamentals_data=state.fundamentals_data.to_str() if state.fundamentals_data else "No fundamentals data available.",
+        market_data=state.market_data.to_str() if state.market_data else "No market data available.",
     )
     return [
         {"role": "system", "content": prompt.system_prompt},
@@ -38,14 +40,14 @@ def _build_messages(state: AdvisorState) -> list[dict[str, str]]:
 
 
 def _request_analyst_report(
-    client: OpenAI, messages: list[dict[str, str]]
+    client: OpenAI, messages: list[ChatCompletionMessageParam]
 ) -> tuple[AnalystReport, int, int]:
     """Call the LLM with a schema-constrained response, retrying on validation errors.
 
     Returns:
         The parsed report and the accumulated (input_tokens, output_tokens) across attempts.
     """
-    response_format = {
+    response_format: ResponseFormatJSONSchema = {
         "type": "json_schema",
         "json_schema": {
             "name": "analyst_report",
@@ -66,6 +68,8 @@ def _request_analyst_report(
             total_output_tokens += response.usage.completion_tokens
 
         raw_report = response.choices[0].message.content
+        if raw_report is None:
+            raise ValueError("LLM response content was empty")
         try:
             return AnalystReport.model_validate_json(raw_report), total_input_tokens, total_output_tokens
         except ValidationError as exc:

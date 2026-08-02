@@ -33,8 +33,8 @@ from dataclasses import dataclass
 
 @dataclass
 class AnalystPrompt:
+    analyst_prompt: str
     system_prompt: str = SYSTEM_PROMPT_V1
-    analyst_prompt: str = None
 
 def generate_analyst_prompt(ticker: str, company_name: str, news_data: str, fundamentals_data: str, market_data: str) -> AnalystPrompt:
     """Generate the analyst prompt with the provided state data.
