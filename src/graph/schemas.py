@@ -13,19 +13,19 @@ class NewsItem(BaseModel):
 
 class FundamentalsSnapshot(BaseModel):
     as_of_date: str
-    market_cap: float | None = None
-    trailing_pe: float | None = None
-    revenue_growth: float | None = None
-    profit_margins: float | None = None
+    market_cap: float | None = None  # company size: share price x shares outstanding
+    trailing_pe: float | None = None  # valuation: price paid per $1 of past earnings
+    revenue_growth: float | None = None  # growth: is the business expanding its sales
+    profit_margins: float | None = None  # profitability: revenue kept as profit
 
 
 class MarketSnapshot(BaseModel):
     start_date: str
     end_date: str
-    last_close: float | None = None
-    sma_50: float | None = None
-    rsi_14: float | None = None
-    volatility_6m: float | None = None
+    last_close: float | None = None  # most recent closing price
+    sma_50: float | None = None  # trend: 50-day average price
+    rsi_14: float | None = None  # momentum: 0-100, >70 overbought, <30 oversold
+    volatility_6m: float | None = None  # risk: annualized std of daily returns
 
 
 class AnalystReport(BaseModel):
