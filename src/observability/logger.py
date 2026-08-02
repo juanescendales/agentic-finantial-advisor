@@ -21,12 +21,12 @@ def setup_logging(level: int = logging.INFO) -> None:
 
 
 def start_run() -> str:
-    run_id = uuid.uuid4().hex[:12]
+    new_run_id = uuid.uuid4().hex[:12]
     _RUNS_DIR.mkdir(exist_ok=True)
     ts = datetime.now(UTC).strftime("%Y%m%dT%H%M%S")
-    _run_id.set(run_id)
-    _run_file.set(_RUNS_DIR / f"{ts}_{run_id}.jsonl")
-    return run_id
+    _run_id.set(new_run_id)
+    _run_file.set(_RUNS_DIR / f"{ts}_{new_run_id}.jsonl")
+    return new_run_id
 
 
 def log_node_event(
