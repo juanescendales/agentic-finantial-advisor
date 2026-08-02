@@ -2,9 +2,13 @@ from datetime import datetime
 
 import pandas as pd
 import yfinance as yf
+from urllib.parse import urlparse
+from tavily import TavilyClient
 
-from src.graph.schemas import FundamentalsSnapshot, MarketSnapshot
+
+from src.config import settings
 from src.graph.state import AdvisorState
+from src.graph.schemas import FundamentalsSnapshot, MarketSnapshot, NewsItem
 
 
 def compute_rsi(close: pd.Series, window: int = 14) -> pd.Series:
@@ -24,7 +28,26 @@ def compute_rsi(close: pd.Series, window: int = 14) -> pd.Series:
 
 
 def fetch_news(state: AdvisorState) -> dict[str, object]:
-    raise NotImplementedError("fetch_news must populate news_data.")
+    client = TavilyClient(api_key=settings.tavily_api_key)
+
+    query = f"{state.company_name or state.ticker} stock news"
+    if state.critic_feedback:
+        query = f"{query} {state.critic_feedback}"
+
+    response = client.search(query=query, topic="news", max_results=7, days=7)
+
+    news_data = [
+        NewsItem(
+            title=result["title"],
+            source=urlparse(result["url"]).netloc,
+            url=result["url"],
+            published_at=result.get("published_date"),
+            summary=result.get("content"),
+        )
+        for result in response.get("results", [])
+    ]
+
+    return {"news_data": news_data}
 
 
 def fetch_fundamentals(state: AdvisorState) -> dict[str, object]:

@@ -6,8 +6,9 @@ requires-python = ">=3.12"
 dependencies = [
     "langgraph>=1.0.0",
     "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
     "yfinance>=0.2.40",
-    "pandas>=2.2.0",
+    "tavily-python>=0.5.0",
 ]
 
 [[tool.uv.index]]
@@ -19,6 +20,7 @@ default = true
 dev = [
     "black>=25.0.0",
     "mypy>=1.0.0",
+    "pytest>=8.0.0",
     "ruff>=0.11.0",
     "pandas-stubs>=2.2.0",
 ]
@@ -56,11 +58,19 @@ known-first-party = ["src", "app"]
 # ── Type checking: mypy ───────────────────────────────────────────────────────
 [tool.mypy]
 python_version = "3.12"
+plugins = ["pydantic.mypy"]
 strict = true
 warn_return_any = true
 warn_unused_configs = true
 exclude = ["notebooks/"]
 
 [[tool.mypy.overrides]]
-module = ["yfinance.*"]
+module = ["yfinance.*", "tavily.*"]
 ignore_missing_imports = true
+
+# ── Testing: pytest ────────────────────────────────────────────────────────────
+[tool.pytest.ini_options]
+pythonpath = ["."]
+markers = [
+    "integration: hits real external APIs (yfinance, Tavily) — slower, network-dependent, no mocks",
+]
