@@ -59,6 +59,16 @@ class AnalystReport(BaseModel):
     notable_signals: list[str] = Field(default_factory=list)
     data_quality_flags: list[str] = Field(default_factory=list)
 
+    def to_str(self) -> str:
+        """Return a string representation of the analyst report."""
+        return (
+            f"Summary: {self.summary}\n"
+            f"Bull case: {'; '.join(self.bull_case) or 'None reported.'}\n"
+            f"Bear case: {'; '.join(self.bear_case) or 'None reported.'}\n"
+            f"Notable signals: {'; '.join(self.notable_signals) or 'None reported.'}\n"
+            f"Data quality flags: {'; '.join(self.data_quality_flags) or 'None reported.'}"
+        )
+
 
 class AdvisorDecision(BaseModel):
     action: Literal["BUY", "HOLD", "SELL"]
