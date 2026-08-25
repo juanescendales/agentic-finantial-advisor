@@ -77,6 +77,15 @@ class AdvisorDecision(BaseModel):
     key_drivers: list[str] = Field(min_length=1)
     reasoning: str
 
+    def to_str(self) -> str:
+        """Return a string representation of the advisor decision."""
+        return (
+            f"Action: {self.action} · confidence: {self.confidence} · "
+            f"time horizon: {self.time_horizon}\n"
+            f"Key drivers: {'; '.join(self.key_drivers)}\n"
+            f"Reasoning: {self.reasoning}"
+        )
+
 
 class CriticVerdict(BaseModel):
     status: Literal["ok", "needs_more"]
