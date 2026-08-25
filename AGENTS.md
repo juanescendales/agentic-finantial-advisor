@@ -80,13 +80,19 @@ News Sources → Ingestion Agent → Analysis Agent → Advisor Agent → User R
 
 - Python 3.11+
 - Use **OpenRouter** via the `openai` SDK — never use other providers unless explicitly told
-- Client: `openai.OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.environ["OPENROUTER_API_KEY"])`
-- Default model: `openai/gpt-oss-20b:free` unless the task requires speed (`mistralai/mistral-7b-instruct:free`)
-- Free OpenRouter models confirmed to support `structured_outputs` (required for `response_format` json_schema), worth comparing across providers:
-  - `openai/gpt-oss-20b:free` (OpenAI)
-  - `google/gemma-4-26b-a4b-it:free` (Google)
-  - `nvidia/nemotron-3-super-120b-a12b:free` (NVIDIA, largest/most capable of the four)
-  - `nvidia/nemotron-nano-9b-v2:free` (NVIDIA, smallest/lightweight contrast)
+- Client: `openai.OpenAI(base_url="https://openrouter.ai/api/v1", api_key=settings.open_router_api_key)` — read via `src/config.py`, which resolves the `OPEN_ROUTER_API_KEY` env var
+- Default model: `nvidia/nemotron-3-super-120b-a12b:free`, defined once as `LLM_MODEL` in `src/tools/llm.py`
+- Free-tier availability shifts without notice. Re-check before assuming a model works, and update this table with what you observe. Last verified **2026-08-25** by requesting a `CriticVerdict` with `response_format` json_schema:
+
+  | Model | Status |
+  |---|---|
+  | `nvidia/nemotron-3-super-120b-a12b:free` | ✅ Returns schema-valid JSON — current default |
+  | `google/gemma-4-26b-a4b-it:free` | ⚠️ Responds, but the body is not parseable JSON despite the json_schema |
+  | `openai/gpt-oss-20b:free` | ❌ 404 — moved to paid; the paid slug `openai/gpt-oss-20b` remains |
+  | `nvidia/nemotron-nano-9b-v2:free` | ❌ 404 — no endpoints |
+  | `mistralai/mistral-7b-instruct:free` | ❌ 404 — no endpoints |
+
+  Changing the default model invalidates comparisons against previously recorded runs in `evals/results/`. Record the model alongside every score.
 - Avoid LangChain or LlamaIndex abstractions
 - Prefer **structured/tool-based extraction** (function calling or `response_format` json_schema) over parsing free-text model output
 
